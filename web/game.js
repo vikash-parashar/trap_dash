@@ -4,7 +4,7 @@ const cv=$('cv'),c=cv.getContext('2d');const P=PAL.meadow;
 const TILE=32,LEN=56,END=LEN*TILE;
 let DPR=1,SC=1,VW=320,EXTRA=0;
 // ---------- audio ----------
-let AC=null,musOn=true,sfxOn=true,musTimer=null;
+let AC=null,musOn=true,sfxOn=true,musTimer=null;// musTimer: true while music should play
 function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}return AC}
 function tone(f,d,type='square',v=.06,slide=0,when=0){const a=ac();if(!a)return;const t=a.currentTime+when;const o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,f+slide),t+d);g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.02);}
 function noise(d,v=.08,when=0){const a=ac();if(!a)return;const n=a.sampleRate*d,b=a.createBuffer(1,n,a.sampleRate),ch=b.getChannelData(0);for(let i=0;i<n;i++)ch[i]=(Math.random()*2-1)*(1-i/n);const s=a.createBufferSource();s.buffer=b;const g=a.createGain();g.gain.value=v;s.connect(g);g.connect(a.destination);s.start(a.currentTime+when);}
@@ -12,8 +12,15 @@ const SFX={jump:()=>tone(330,.14,'square',.05,330),coin:()=>{tone(988,.07,'squar
  crack:()=>noise(.25,.12),spike:()=>{tone(1800,.08,'sawtooth',.04,-900)},boom:()=>{noise(.4,.18);tone(90,.35,'sine',.2,-50)},die:()=>tone(520,.5,'triangle',.08,-380),
  pop:()=>{noise(.08,.15);tone(700,.1,'square',.05,-400)},reward:()=>{[660,880,1100].forEach((f,i)=>tone(f,.12,'triangle',.06,0,i*.08))},land:()=>noise(.05,.03),win:()=>{[523,659,784,1047].forEach((f,i)=>tone(f,.18,'square',.05,0,i*.1))}};
 function sfx(n){if(sfxOn&&SFX[n])SFX[n]();}
-const MEL=[392,0,440,392,523,0,494,0,392,0,440,392,587,0,523,0],BASS=[131,131,165,165,175,175,147,147];let mstep=0;
-function music(on){clearInterval(musTimer);if(!on)return;musTimer=setInterval(()=>{if(!musOn||!AC)return;const m=MEL[mstep%16];if(m)tone(m,.16,'triangle',.025);if(mstep%2===0)tone(BASS[(mstep/2|0)%8],.28,'sine',.05);mstep++;},170);}
+// Background music: "Clockwork Tower" (original track, seamless loop) played gapless through Web Audio.
+const MUSIC_URL='audio/clockwork-tower.mp3',MUSIC_VOL=.32;let musBuf=null,musSrc=null,musGain=null,musLoading=false;
+function loadMusic(){const a=ac();if(!a||musBuf||musLoading)return;musLoading=true;
+ fetch(MUSIC_URL).then(r=>r.arrayBuffer()).then(b=>new Promise((ok,no)=>a.decodeAudioData(b,ok,no))).then(buf=>{musBuf=buf;musLoading=false;if(musOn&&musTimer)startMusic();}).catch(()=>{musLoading=false;});}
+function startMusic(){const a=ac();if(!a||!musBuf||musSrc)return;musGain=a.createGain();musGain.gain.setValueAtTime(0,a.currentTime);musGain.gain.linearRampToValueAtTime(MUSIC_VOL,a.currentTime+1.5);musGain.connect(a.destination);
+ musSrc=a.createBufferSource();musSrc.buffer=musBuf;musSrc.loop=true;musSrc.connect(musGain);musSrc.start();}
+function stopMusic(){if(!musSrc)return;const a=ac(),s=musSrc,g=musGain;musSrc=null;musGain=null;try{g.gain.setTargetAtTime(0,a.currentTime,.15);s.stop(a.currentTime+.6);}catch(e){}}
+function music(on){musTimer=on||null;if(!on){stopMusic();return}if(AC&&AC.state==='suspended')AC.resume();if(musBuf)startMusic();else loadMusic();}
+document.addEventListener('visibilitychange',()=>{if(!AC)return;if(document.hidden)AC.suspend();else AC.resume();});
 // ---------- state ----------
 let G_={level:12,hearts:3,coins:0,deaths:0,lvlCoins:0,state:'start'};
 let L=null,Pl=null,time=0,toastT=0;

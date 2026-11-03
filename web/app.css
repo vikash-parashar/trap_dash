@@ -1,0 +1,14 @@
+/* App mode (Android APK): no page chrome, the game fills the whole screen. */
+html.app,html.app body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#000}
+html.app .wrap>header,html.app .bar,html.app .hint,html.app .notes,html.app section.heroes{display:none!important}
+html.app .wrap{padding:0;margin:0;max-width:none;gap:0}
+html.app .stagebox{min-height:0;height:100%}
+html.app .device{border-radius:0!important;padding:0!important;box-shadow:none!important;width:100vw!important;height:100vh!important;height:100dvh!important;max-width:none}
+html.app .screen{border-radius:0!important}
+html.app .hud{padding-top:max(10px,env(safe-area-inset-top));padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}
+html.app .pad{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right));padding-bottom:max(14px,env(safe-area-inset-bottom))}
+html.app .appheroes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:4px 0 12px}
+html.app .appheroes .hcard{padding-bottom:6px;border-radius:12px}
+html.app .appheroes .hcard .hn{font-size:15px;padding:0 8px;text-align:center}
+html.app .appheroes .hcard .ht{display:none}
+html.app .card{max-height:92%;overflow:auto}

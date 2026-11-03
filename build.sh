@@ -10,4 +10,5 @@ mkdir -p dist app/src/main/assets
   echo '<link rel="stylesheet" href="fonts/fonts.css">'
   grep -v 'fonts.googleapis.com' web/head.html
   echo '<style>'; cat web/app.css; echo '</style></head><body>'; cat web/body.html; js; echo '</body></html>'; } > app/src/main/assets/index.html
+mkdir -p dist/audio && cp app/src/main/assets/audio/*.mp3 dist/audio/
 echo "built dist/index.html and app/src/main/assets/index.html"

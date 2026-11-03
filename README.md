@@ -8,6 +8,7 @@ A cartoon trap platformer by Ampli Studio. Nothing is what it looks like: floors
 |---|---|
 | `web/` | The game (HTML canvas + JavaScript): `helpers.js` art helpers, `hero.js` Dash/Nova/Bolt, `gfx.js` realistic background layers, `game.js` level, traps, lives and ads flow, `app.js` full-screen app mode |
 | `build.sh` | Joins `web/` into one page: `dist/index.html` (browser preview) and `app/src/main/assets/index.html` (Android) |
+| `app/src/main/assets/audio/` | Background music (`clockwork-tower.mp3`, original track made in code, seamless loop) |
 | `app/` | Android app that runs the game full screen, offline, in landscape or portrait |
 | `.github/workflows/build-apk.yml` | Every push builds `TrapDash-N.apk` and puts it in Releases (`build-N`) |
 

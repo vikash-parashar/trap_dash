@@ -5,3 +5,5 @@ local.properties
 *.aab
 .idea/
 dist/
+config.bat
+node_modules

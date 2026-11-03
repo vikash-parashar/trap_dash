@@ -187,8 +187,8 @@ new ResizeObserver(layoutO).observe($('dev'));
  for(const k of Object.keys(SKINS)){const S=SKINS[k];const el=document.createElement('button');el.type='button';el.className='hcard';el.id='h-'+k;el.setAttribute('aria-pressed',k===SKIN);
   el.innerHTML=`<canvas width="480" height="300" aria-hidden="true"></canvas><span class="hn">${S.name}</span><span class="ht">${S.tag}</span>`;box.appendChild(el);
   const cx=el.querySelector('canvas').getContext('2d');cx.setTransform(2,0,0,2,0,0);cards.push({k,cx,el});
-  el.onclick=()=>{SKIN=k;cards.forEach(q=>q.el.setAttribute('aria-pressed',q.k===k));try{localStorage.setItem('tnf-hero',k)}catch(e){}toast(S.name+' selected');};}
- try{const s=localStorage.getItem('tnf-hero');if(s&&SKINS[s]){SKIN=s;cards.forEach(q=>q.el.setAttribute('aria-pressed',q.k===s));}}catch(e){}
+  el.onclick=()=>{if(k!=='kai'){toast(S.name+': '+S.tag);return;}SKIN=k;cards.forEach(q=>q.el.setAttribute('aria-pressed',q.k===k));try{localStorage.setItem('tnf-hero',k)}catch(e){}toast(S.name+' selected');};}
+ try{const s=localStorage.getItem('tnf-hero');if(s==='kai'&&SKINS[s]){SKIN=s;cards.forEach(q=>q.el.setAttribute('aria-pressed',q.k===s));}}catch(e){}
  function anim(now){const t=now/1000;for(const q of cards){const c2=q.cx;const oW=W;W=240;c2.save();
    const g2=c2.createLinearGradient(0,0,0,150);g2.addColorStop(0,'#2A2F4A');g2.addColorStop(1,'#1B1E2D');c2.fillStyle=g2;c2.fillRect(0,0,240,150);
    glow(c2,120,70,90,'rgba(255,197,61,.12)');c2.fillStyle='#232739';c2.fillRect(0,118,240,32);c2.fillStyle='#2F3450';c2.fillRect(0,118,240,2);

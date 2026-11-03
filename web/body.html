@@ -1,9 +1,9 @@
 <div class="wrap">
   <header style="display:flex;flex-direction:column;gap:8px">
-    <h1>Trap Dash: <span>final gameplay</span></h1>
+    <h1>Trap Dash: <span>Mira ko bachao</span></h1>
     <p class="lead">Asli game jaisa poora level. Daudo, coins lo, danger zone dekho aur jump karo. 3 lives khatam hone pe ad wala screen, aur level clear hone pe agla level. Har baar marne pe traps shuffle hote hain. Upar se device aur orientation badal ke dekho, layout khud adjust hota hai.</p>
   </header>
-  <section class="heroes"><h2>Hero chuno</h2><div class="hgrid" id="heroes" role="group" aria-label="Pick a hero"></div></section>
+  <section class="heroes"><h2>Characters</h2><div class="hgrid" id="heroes" role="group" aria-label="Pick a hero"></div></section>
   <div class="bar" role="group" aria-label="Device">
     <button class="chip" type="button" id="d-pl" aria-pressed="false">📱 Phone landscape</button>
     <button class="chip" type="button" id="d-pp" aria-pressed="false">📱 Phone portrait</button>
@@ -31,8 +31,9 @@
           <div class="prog"><i id="progI"></i></div>
           <div class="toast" id="toast" style="opacity:0"></div>
           <div class="sheet" id="sStart"><div class="card">
-            <h3>Level 12</h3><p>Easy* mode. Trap ke paas laal danger zone dikhega. Exact tile nahi batata, bas itna ki kahin yahin hai.</p>
+            <h3>Level 12</h3><p>Mira Trap Tower ki 1000vi manzil pe qaid hai. Laal danger zone batata hai ki trap kahin yahin hai.</p>
             <button class="btn gold" type="button" id="bStart">▶ Play</button>
+            <div class="strow"><button class="btn" type="button" id="bStory">▶ Story dekho</button><button class="btn" type="button" id="bEnding">Level 1000 ending</button></div>
           </div></div>
           <div class="sheet" id="sPause" hidden><div class="card">
             <h3>Paused</h3>
@@ -58,6 +59,7 @@
             <h3>No Ads</h3><p>Ye sirf preview hai. Asli app mein yahan Google Play ka payment sheet khulega (₹149 / $2.99, ek baar).</p>
             <button class="btn gold" type="button" id="bShopOk">Theek hai</button>
           </div></div>
+          <div class="story" id="story" hidden><canvas id="stcv" aria-label="Story animation"></canvas><div class="stsub" id="stsub" aria-live="polite"></div><button type="button" class="stskip" id="stskip">Skip ⏭</button></div>
           <div class="ad" id="ad" hidden>
             <span class="tag">AD PREVIEW · dummy</span><span class="cnt" id="adCnt">5</span>
             <h3 id="adH">Rewarded ad</h3><p id="adP" style="margin:0;opacity:.85">Yahan asli AdMob video chalega</p>

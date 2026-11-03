@@ -1,0 +1,87 @@
+<div class="wrap">
+  <header style="display:flex;flex-direction:column;gap:8px">
+    <h1>Trap Dash: <span>final gameplay</span></h1>
+    <p class="lead">Asli game jaisa poora level. Daudo, coins lo, danger zone dekho aur jump karo. 3 lives khatam hone pe ad wala screen, aur level clear hone pe agla level. Har baar marne pe traps shuffle hote hain. Upar se device aur orientation badal ke dekho, layout khud adjust hota hai.</p>
+  </header>
+  <section class="heroes"><h2>Hero chuno</h2><div class="hgrid" id="heroes" role="group" aria-label="Pick a hero"></div></section>
+  <div class="bar" role="group" aria-label="Device">
+    <button class="chip" type="button" id="d-pl" aria-pressed="false">📱 Phone landscape</button>
+    <button class="chip" type="button" id="d-pp" aria-pressed="false">📱 Phone portrait</button>
+    <button class="chip" type="button" id="d-tl" aria-pressed="false">Tablet landscape</button>
+    <button class="chip" type="button" id="d-tp" aria-pressed="false">Tablet portrait</button>
+    <button class="chip" type="button" id="d-fs" aria-pressed="false">⛶ Full screen</button>
+  </div>
+  <p class="hint">Controls: <kbd>←</kbd> <kbd>→</kbd> ya <kbd>A</kbd> <kbd>D</kbd> chalna, <kbd>Space</kbd> jump, <kbd>P</kbd> pause. Phone pe screen ke buttons dabao.</p>
+  <div class="stagebox" id="stage">
+    <div class="device" id="dev">
+      <div class="screen" id="scr">
+        <div class="game" id="game">
+          <canvas id="cv" aria-label="Trap Dash game"></canvas>
+          <div class="hud">
+            <div class="hearts" id="hearts" aria-label="Lives"></div>
+            <div class="pill" id="lvl">Level 12<small>EASY*</small></div>
+            <div class="right"><div class="coins"><i></i><span id="coin">0</span></div><button class="ibtn" type="button" id="bPause" aria-label="Pause">II</button></div>
+          </div>
+          <div class="prog"><i id="progI"></i></div>
+          <div class="toast" id="toast" style="opacity:0"></div>
+          <div class="sheet" id="sStart"><div class="card">
+            <h3>Level 12</h3><p>Easy* mode. Trap ke paas laal danger zone dikhega. Exact tile nahi batata, bas itna ki kahin yahin hai.</p>
+            <button class="btn gold" type="button" id="bStart">▶ Play</button>
+          </div></div>
+          <div class="sheet" id="sPause" hidden><div class="card">
+            <h3>Paused</h3>
+            <div class="tog">Music <button class="sw" type="button" role="switch" id="tMus" aria-checked="true" aria-label="Music"></button></div>
+            <div class="tog">Sound effects <button class="sw" type="button" role="switch" id="tSfx" aria-checked="true" aria-label="Sound effects"></button></div>
+            <button class="btn gold" type="button" id="bResume">▶ Resume</button>
+            <button class="btn" type="button" id="bRestart">↺ Restart level</button>
+          </div></div>
+          <div class="sheet" id="sLives" hidden><div class="card">
+            <h3>Lives khatam!</h3><p>Agli free life <b id="freeT">19:59</b> mein. Ya abhi wapas aao:</p>
+            <button class="btn gold" type="button" id="bAd1">▶ 1 ad dekho<small>+1 life</small></button>
+            <button class="btn" type="button" id="bAd3">▶▶▶ 3 ads lagatar<small>saari 3 lives + 50 coins</small></button>
+            <button class="btn ok" type="button" id="bNoAds">No Ads · ₹149<small>forced ads band, lives 10 min mein refill</small></button>
+          </div></div>
+          <div class="sheet" id="sClear" hidden><div class="card">
+            <h3 id="clrT">Level 12 clear!</h3>
+            <div class="stars" id="stars"><span>★</span><span>★</span><span>★</span></div>
+            <p id="clrP">0 deaths · 0 coins</p>
+            <button class="btn gold" type="button" id="bNext">Next level →</button>
+            <button class="btn" type="button" id="b2x">▶ Ad dekho, coins 2x</button>
+          </div></div>
+          <div class="sheet" id="sShop" hidden><div class="card">
+            <h3>No Ads</h3><p>Ye sirf preview hai. Asli app mein yahan Google Play ka payment sheet khulega (₹149 / $2.99, ek baar).</p>
+            <button class="btn gold" type="button" id="bShopOk">Theek hai</button>
+          </div></div>
+          <div class="ad" id="ad" hidden>
+            <span class="tag">AD PREVIEW · dummy</span><span class="cnt" id="adCnt">5</span>
+            <h3 id="adH">Rewarded ad</h3><p id="adP" style="margin:0;opacity:.85">Yahan asli AdMob video chalega</p>
+            <div class="bar2"><i id="adBar"></i></div>
+            <button type="button" id="adX" hidden>✕ Close</button>
+          </div>
+        </div>
+        <div class="pad" id="pad">
+          <div><button class="cbtn" type="button" id="cL" aria-label="Left">◀</button><button class="cbtn" type="button" id="cR" aria-label="Right">▶</button></div>
+          <div><button class="cbtn jump" type="button" id="cJ" aria-label="Jump">JUMP</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="notes">
+    <div class="note"><h3>Landscape + portrait</h3><ul>
+      <li><b>Landscape:</b> poori screen game, buttons game ke upar transparent.</li>
+      <li><b>Portrait:</b> upar game, neeche bade buttons ka alag panel, taaki ungli game ko na dhake.</li>
+      <li>Phone ghumao toh game turant switch hota hai, level ruka rehta hai.</li>
+      <li>Godot setting: orientation <b>sensor</b>, stretch <b>canvas_items + expand</b>. 4:3 tablet se 21:9 phone tak sab fit.</li>
+      <li>Notch aur gesture bar ke liye <b>safe area</b>, HUD kabhi nahi chhupta.</li></ul></div>
+    <div class="note"><h3>Ads kab aate hain</h3><ul>
+      <li><b>Rewarded:</b> lives, 2x coins. Hamesha user ki marzi se.</li>
+      <li><b>Interstitial:</b> level clear ke baad. Max 1 per 2 min, pehle 5 levels mein koi nahi.</li>
+      <li><b>Banner:</b> sirf menu mein, khelte waqt kabhi nahi.</li>
+      <li>No Ads (₹149) ya Mega Pack (₹299) lene pe forced ads band.</li></ul></div>
+    <div class="note"><h3>Is preview mein</h3><ul>
+      <li>3 lives, 1 ad = 1 life, 3 ads = full + 50 coins.</li>
+      <li>4 trap types shuffle: girta floor, spikes, crusher, nakli coin. Har death pe naya layout.</li>
+      <li>Asli game mein saare 29 traps, 1000 levels, aur 10 characters aayenge.</li>
+      <li>Ads dummy hain, asli AdMob nahi.</li></ul></div>
+  </div>
+</div>

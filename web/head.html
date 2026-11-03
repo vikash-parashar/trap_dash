@@ -81,4 +81,13 @@ h1{font-size:clamp(28px,4.5vw,44px);line-height:1.05}h1 span{color:var(--accent)
 .hcard .ht{font-size:12.5px;color:var(--mute);padding:0 12px}
 .hcard[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 3px rgba(255,197,61,.18)}
 @media (prefers-reduced-motion:reduce){.device{transition:none}}
+/* Noir look: monochrome canvas, quieter HUD */
+.noir .hearts,.noir .pill,.noir .coins,.noir .ibtn{background:rgba(0,0,0,.45);border-color:rgba(255,255,255,.14)}
+.noir .pill small{color:#D8DAD5}
+.noir .prog i{background:#E9EAE6}
+.noir .cbtn{background:rgba(0,0,0,.35);border-color:rgba(255,255,255,.28)}
+.noir .cbtn.jump{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.6);color:#fff}
+.noir .portrait .pad{background:linear-gradient(180deg,#0C0D0D,#050505)}
+.noir .portrait .cbtn{background:#161817;border-color:#2C2F2D}
+.noir .portrait .cbtn.jump{background:linear-gradient(180deg,#F1F2EE,#BFC2BD);color:#0B0C0D;border-color:#fff}
 </style>

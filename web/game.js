@@ -126,8 +126,9 @@ function resize(){const r=$("game").getBoundingClientRect();if(r.width<4||r.heig
  const cw=r.width,ch=r.height;SC=ch/180;VW=cw/SC;EXTRA=0;if(VW<220){SC=cw/220;VW=220;EXTRA=ch/SC-180;}const ps=Math.round(SC*DPR*100)/100;if(Math.abs(ps-RG.ps)>.01)buildRG(ps);}
 new ResizeObserver(resize).observe($('game'));
 function drawCoin(x,y,red,tt){const g=c.createRadialGradient(x-3,y-3,1,x,y,10);g.addColorStop(0,red?'#FFB3B3':'#FFF3B0');g.addColorStop(.6,red?'#FF4040':'#FFC53D');g.addColorStop(1,red?'#A11':'#C98A0B');c.fillStyle=g;c.beginPath();c.ellipse(x,y,9*(Math.abs(Math.cos(tt*3+x))*.7+.3),9,0,0,7);c.fill();glow(c,x,y,18,red?'rgba(255,60,60,.5)':'rgba(255,210,90,.35)');}
+function skyTop(c,tt){const sg=c.createLinearGradient(0,0,0,EXTRA+2);sg.addColorStop(0,'#2E69B5');sg.addColorStop(1,'#3F7FCB');c.fillStyle=sg;c.fillRect(0,0,VW,EXTRA+2);c.fillStyle='rgba(255,255,255,.55)';for(let i=0;i<4;i++){const cx=((i*97+tt*5)%(VW+120))-60,cy=EXTRA*(.2+i*.18);for(let j=0;j<4;j++){c.beginPath();c.ellipse(cx+j*12,cy-(j%2)*5,15-(j%3)*2,8,0,0,7);c.fill();}}}
 function render(){const tt=time;c.setTransform(DPR*SC,0,0,DPR*SC,0,0);W=VW;
- if(EXTRA>0){const sg=c.createLinearGradient(0,0,0,EXTRA+2);sg.addColorStop(0,'#2E69B5');sg.addColorStop(1,'#3F7FCB');c.fillStyle=sg;c.fillRect(0,0,VW,EXTRA+2);c.fillStyle='rgba(255,255,255,.55)';for(let i=0;i<4;i++){const cx=((i*97+tt*5)%(VW+120))-60,cy=EXTRA*(.2+i*.18);for(let j=0;j<4;j++){c.beginPath();c.ellipse(cx+j*12,cy-(j%2)*5,15-(j%3)*2,8,0,0,7);c.fill();}}}c.save();c.translate(0,EXTRA);
+ if(EXTRA>0)skyTop(c,tt);c.save();c.translate(0,EXTRA);
  CAMX=cl((Pl?Pl.x:0)-VW*.36,0,END-VW);bg(c,P,tt);
  c.save();c.translate(-CAMX,0);
  const v0=CAMX-40,v1=CAMX+VW+40;
@@ -168,11 +169,13 @@ let last=performance.now();function loop(now){const dt=Math.min(.033,(now-last)/
 startLevel();resize();requestAnimationFrame(loop);
 // ---------- devices ----------
 const DEV={pl:[20,9,'phone'],pp:[9,20,'phone'],tl:[4,3,'tablet'],tp:[3,4,'tablet']};
-function setDev(k){const d=$('dev');document.querySelectorAll('.bar .chip').forEach(b=>b.setAttribute('aria-pressed',b.id==='d-'+k));
+function setDev(k){const d=$('dev');document.querySelectorAll('.bar .chip[id^="d-"]').forEach(b=>b.setAttribute('aria-pressed',b.id==='d-'+k));
  if(k==='fs'){const el=$('dev');(el.requestFullscreen?el.requestFullscreen():Promise.reject()).catch(()=>{});d.className='device full';d.style.width='100%';d.style.height=Math.min(innerHeight*.9,900)+'px';layoutO();return;}
  const [aw,ah,kind]=DEV[k];d.className='device '+kind;const box=$('stage').getBoundingClientRect().width;const maxH=Math.max(420,Math.min(innerHeight*.82,760));let w=Math.min(box,kind==='tablet'?900:1000),h=w*ah/aw;if(h>maxH){h=maxH;w=h*aw/ah;}d.style.width=w+'px';d.style.height=h+'px';layoutO();try{localStorage.setItem('tnf-dev',k)}catch(e){}}
 function layoutO(){const r=$('dev').getBoundingClientRect();$('scr').classList.toggle('portrait',r.height>r.width);}
 ['pl','pp','tl','tp','fs'].forEach(k=>$('d-'+k).onclick=()=>setDev(k));
+$('lookT').textContent=NOIR?'Purana look':'Naya dark look';
+for(const k of Object.keys(MOODS)){const b=$('m-'+k);b.setAttribute('aria-pressed',NOIR&&k===MOOD);b.onclick=()=>{MOOD=k;try{localStorage.setItem('td-mood',k);localStorage.setItem('td-look','noir')}catch(e){}if(!NOIR)location.reload();for(const q of Object.keys(MOODS))$('m-'+q).setAttribute('aria-pressed',q===k);};}$('lookT').onclick=()=>{try{localStorage.setItem('td-look',NOIR?'color':'noir')}catch(e){}location.reload();};
 document.addEventListener('fullscreenchange',()=>{const d=$('dev');if(document.fullscreenElement){d.style.width='100vw';d.style.height='100vh';}else if(d.classList.contains('full')){setDev(innerWidth<700?'pp':'pl');}layoutO();});
 addEventListener('resize',()=>{const d=$('dev');if(d.classList.contains('full')&&document.fullscreenElement)layoutO();});
 let saved=null;try{saved=localStorage.getItem('tnf-dev')}catch(e){}

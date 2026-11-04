@@ -50,3 +50,9 @@ drawCoin=function(x,y,red,tt){const r=7.5,s=Math.cos(tt*2.4+x*.05),ax=Math.max(.
  if(ax>.3){c.save();c.translate(fx,y);c.scale(s,1);c.fillStyle=pal[3];c.globalAlpha=.6;c.fillRect(-2.6,-3.4,5.2,1.6);c.fillRect(-.9,-3.4,1.8,6.8);c.globalAlpha=1;c.fillStyle=pal[0];c.fillRect(-2.9,-3.8,5.2,1.5);c.fillRect(-1.2,-3.8,1.7,6.6);c.restore();}
  if(((tt*.5+x*.013)%1)<.06){c.fillStyle='#FFFBEA';c.beginPath();const sx=fx-3,sy=y-4,q=3;c.moveTo(sx,sy-q);c.lineTo(sx+.6,sy-.6);c.lineTo(sx+q,sy);c.lineTo(sx+.6,sy+.6);c.lineTo(sx,sy+q);c.lineTo(sx-.6,sy+.6);c.lineTo(sx-q,sy);c.lineTo(sx-.6,sy-.6);c.fill();}};
 window.tdT=()=>({L,Pl,G_,kill});
+// what killed you, in one word, so a death is never confusing
+const _kill=kill;kill=function(type){if(!Pl||Pl.dead)return _kill(type);let n=type==='byebye'?'Khaai mein gire!':null;
+ if(!n){let best=null,bd=1e9;for(const t of L.traps){if(t.st!=='fire')continue;const d=Math.abs((t.sx??t.bx??t.x)-Pl.x);if(d<bd){bd=d;best=t;}}
+  n=best?({crack:'Nakli zameen!',spikes:'Bhaale nikle!',crusher:'Crusher gira!',saw:best.type==='axe'?'Kulhaadi!':'Aari!',axe:'Kulhaadi!',boulder:'Patthar aaya!',coin:'Nakli sikka!'})[best.type]:null;}
+ _kill(type);if(n)toast(n);};
+(()=>{const b=document.getElementById('charT');if(!b)return;b.textContent='Characters: '+(CHAR_SIL?'Silhouette':'Rangeen');b.onclick=()=>{try{localStorage.setItem('td-chars',CHAR_SIL?'color':'sil')}catch(e){}CHAR_SIL=!CHAR_SIL;b.textContent='Characters: '+(CHAR_SIL?'Silhouette':'Rangeen');};})();

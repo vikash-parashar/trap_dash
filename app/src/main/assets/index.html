@@ -127,6 +127,7 @@ html.app .card{max-height:92%;overflow:auto}
     <button class="chip" type="button" id="d-tp" aria-pressed="false">Tablet portrait</button>
     <button class="chip" type="button" id="d-fs" aria-pressed="false">⛶ Full screen</button>
     <button class="chip" type="button" id="lookT" aria-pressed="false">Purana look</button>
+    <button class="chip" type="button" id="charT" aria-pressed="false">Characters: Silhouette</button>
   </div>
   <div class="bar" role="group" aria-label="Mood">
     <button class="chip" type="button" id="m-jungle" aria-pressed="false">🌿 Misty jungle</button>
@@ -613,7 +614,7 @@ function pose(st,ph,vy,t){const s=Math.sin(ph),s2=Math.sin(ph+Math.PI);
  if(st==='zap')return{l:[.45,0],r:[-.45,0],al:[2.4,-.2],ar:[-2.4,.2],bob:0,lean:0};
  if(st==='slide')return{l:[1.2,-.2],r:[.6,-.4],al:[-2.2,.3],ar:[-1.6,.4],bob:4,lean:-.35};
  if(st==='struggle')return{l:[.6+Math.sin(t*14)*.5,-.8],r:[-.4+Math.sin(t*14+2)*.5,-.6],al:[2.6+Math.sin(t*11)*.4,-.5],ar:[-2.2+Math.sin(t*12)*.4,-.4],bob:0,lean:0};
- if(st==='down')return{l:[1.4,-.3],r:[1.2,-.6],al:[1.6,.3],ar:[1.2,.5],bob:0,lean:-1.35};
+ if(st==='down')return{l:[.3,-.2],r:[.1,-.5],al:[1.9,-.6],ar:[2.5,-.2],bob:0,lean:0};
  if(st==='slump')return{l:[.35,-.9],r:[.15,-1.1],al:[.5,.1],ar:[.2,.2],bob:0,lean:.55};
  if(st==='carry')return{l:[s*.4,-.2-Math.max(0,s)*.4],r:[s2*.4,-.2-Math.max(0,s2)*.4],al:[2.6,-1.5],ar:[2.2,-1.9],bob:-Math.abs(Math.cos(ph))*.8,lean:.12};
  if(st==='walk')return{l:[s*.45,-Math.max(0,Math.sin(ph-1.2))*.7],r:[s2*.45,-Math.max(0,Math.sin(ph+Math.PI-1.2))*.7],al:[-s*.4,-.3],ar:[-s2*.4,-.3],bob:-Math.abs(Math.cos(ph))*.7,lean:.04};
@@ -650,10 +651,11 @@ function figure(c,S,o){const st=o.st||'idle',t=o.t??performance.now()/1000,ph=o.
  c.fillStyle=skinD;c.beginPath();c.ellipse(-.6,hy+.4,1.1,1.5,0,0,7);c.fill();
  // face details
  const scared=o.scared||((st==='air'||st==='fall')&&vy>150);const bl=!scared&&(t%3.6)<.12;
- if(S.shades){c.fillStyle='#0c0d10';c.fillRect(hr*.25,hy-1.6,hr*.85,1.7);c.fillStyle='rgba(255,255,255,.4)';c.fillRect(hr*.35,hy-1.4,.8,.4);}
+ if(S.sil){c.save();c.fillStyle=S.eye||'#F4F1E8';c.shadowColor=S.eye||'#fff';c.shadowBlur=3;c.beginPath();if(bl)c.ellipse(hr*.62,hy-.7,.8,.15,0,0,7);else c.ellipse(hr*.62,hy-.7,scared?1:.75,scared?1.05:.8,0,0,7);c.fill();c.restore();}
+ else if(S.shades){c.fillStyle='#0c0d10';c.fillRect(hr*.25,hy-1.6,hr*.85,1.7);c.fillStyle='rgba(255,255,255,.4)';c.fillRect(hr*.35,hy-1.4,.8,.4);}
  else{c.fillStyle='#fff';c.beginPath();c.ellipse(hr*.62,hy-.7,scared?1.05:.85,bl?.15:(scared?1.05:.7),0,0,7);c.fill();if(!bl){c.fillStyle='#24140b';c.beginPath();c.arc(hr*.72,hy-.65,scared?.55:.48,0,7);c.fill();}
   c.strokeStyle=girl?'#1b0f08':S.hc;c.lineWidth=girl?.4:.55;c.beginPath();c.moveTo(hr*.2,hy-(big||o.angry?1.6:2.1));c.lineTo(hr*1.0,hy-(big?2.4:2.2));c.stroke();}
- c.strokeStyle=girl?'#A8434A':_sh(S.skin,-.45);c.lineWidth=girl?.6:.4;c.beginPath();if(scared){c.ellipse(hr*.82,hy+2.6,.55,.75,0,0,7);c.stroke();}else{c.moveTo(hr*.55,hy+2.6);c.lineTo(hr*.95,hy+2.5);c.stroke();}
+ if(!S.sil){c.strokeStyle=girl?'#A8434A':_sh(S.skin,-.45);c.lineWidth=girl?.6:.4;c.beginPath();if(scared){c.ellipse(hr*.82,hy+2.6,.55,.75,0,0,7);c.stroke();}else{c.moveTo(hr*.55,hy+2.6);c.lineTo(hr*.95,hy+2.5);c.stroke();}}
  if(S.beard){c.fillStyle=S.beard==='stubble'?'rgba(25,15,10,.35)':S.hc;c.beginPath();c.moveTo(-hr*.3,hy+.8);c.quadraticCurveTo(hr*.2,hy+hr*1.25,hr+.3,hy+hr*.6);c.lineTo(hr*.95,hy+1.9);c.quadraticCurveTo(hr*.3,hy+2.4,-hr*.1,hy+.5);c.closePath();c.fill();}
  // hair
  c.fillStyle=S.hc;
@@ -673,7 +675,10 @@ function figure(c,S,o){const st=o.st||'idle',t=o.t??performance.now()/1000,ph=o.
  {const[hx,hy2]=seg(c,1.5,shY+1.5,P.al[0],P.al[1],6.4,6.2,aw,aw*.85,sleeve,S.top==='kurti'?S.skin:sleeve);c.fillStyle=S.skin;c.beginPath();c.arc(hx,hy2,1.5,0,7);c.fill();}
  c.restore();
  c.restore();}
-function person(c,x,y,o={}){const S=SKINS[o.skin||SKIN]||SKINS.kai;const t=o.t??performance.now()/1000;
+let CHAR_SIL=true;try{CHAR_SIL=localStorage.getItem('td-chars')!=='color';}catch(e){}
+const SILC='#0B0C0D';
+function silOf(S){return{...S,skin:SILC,tc:SILC,pants:SILC,shoes:SILC,hc:SILC,inner:SILC,sole:null,beard:null,shades:false,sil:true,emb:S.kind==='girl'?'#E3B23C':SILC,eye:S.kind==='goon'?'#FF4A3D':'#F4F1E8'};}
+function person(c,x,y,o={}){let S=SKINS[o.skin||SKIN]||SKINS.kai;if(CHAR_SIL)S=silOf(S);const t=o.t??performance.now()/1000;
  if(!o.noShadow&&y<=G+.5&&y>G-90&&!o.rot){const k=1-(G-y)/90;c.fillStyle=`rgba(0,0,0,${.38*k})`;c.beginPath();c.ellipse(x,G+1.2,10*k+3,2.2*k+.5,0,0,7);c.fill();}
  c.save();c.translate(x,y);if(o.flip)c.scale(-1,1);if(o.rot)c.rotate(o.rot);if(o.alpha!=null)c.globalAlpha=o.alpha;
  // soft rim light from the moon/sun behind
@@ -833,10 +838,12 @@ function render(){const tt=time;c.setTransform(DPR*SC,0,0,DPR*SC,0,0);W=VW;
  for(let k=0;k<LEN;k++){const t=L.tiles[k];if(t.falling&&t.fall<1.2){c.save();c.translate(0,ei(Math.min(1,t.fall/.5))*80);floor(c,P,k*TILE,k*TILE+TILE,G,26);c.restore();}}
  c.strokeStyle='rgba(0,0,0,.14)';c.lineWidth=1;for(let k=Math.floor(v0/TILE);k<v1/TILE;k++){if(L.tiles[k]&&L.tiles[k].solid){c.beginPath();c.moveTo(k*TILE,G+2);c.lineTo(k*TILE,G+9);c.stroke();}}
  // danger zones (Easy*: 2 tiles, 130px before)
- for(const t of L.traps){if(t.st!=='idle'&&t.st!=='tell')continue;const zx=t.z0*TILE,zw=2*TILE;if(Pl.x<zx-130||Pl.x>zx+zw+10)continue;const a=.42+.25*Math.sin(tt*10);
-  const g=c.createLinearGradient(0,G-26,0,G);g.addColorStop(0,'rgba(200,48,32,0)');g.addColorStop(1,`rgba(200,48,32,${a*.5})`);c.fillStyle=g;c.fillRect(zx,G-26,zw,26);
-  c.save();c.beginPath();c.rect(zx,G,zw,9);c.clip();c.fillStyle=`rgba(200,48,32,${a})`;c.fillRect(zx,G,zw,9);c.fillStyle='rgba(30,10,20,.35)';for(let x=zx-10;x<zx+zw;x+=8){const o=tt*20%8;c.beginPath();c.moveTo(x+o,G+9);c.lineTo(x+4+o,G);c.lineTo(x+7+o,G);c.lineTo(x+3+o,G+9);c.fill();}c.restore();
-  c.fillStyle='#B8321F';c.beginPath();c.roundRect(zx+zw/2-8,G-42,16,13,4);c.fill();c.fillStyle='#fff';c.font='900 10px Nunito, system-ui';c.textAlign='center';c.textBaseline='middle';c.fillText('!',zx+zw/2,G-35);}
+ for(const t of L.traps){if(t.st!=='idle'&&t.st!=='tell')continue;const zx=t.z0*TILE,zw=2*TILE;if(Pl.x<zx-130||Pl.x>zx+zw+10)continue;const a=.55+.3*Math.sin(tt*6);
+  // warm warning light on the ground over the danger zone + an old warning sign post
+  const g=c.createRadialGradient(zx+zw/2,G,2,zx+zw/2,G,zw*.75);g.addColorStop(0,`rgba(255,120,40,${.32*a})`);g.addColorStop(1,'rgba(255,120,40,0)');c.fillStyle=g;c.fillRect(zx-zw*.3,G-zw*.5,zw*1.6,zw*.5+6);
+  c.strokeStyle=`rgba(255,150,70,${.75*a})`;c.lineWidth=1.2;c.setLineDash([3,3]);c.beginPath();c.moveTo(zx,G+1);c.lineTo(zx+zw,G+1);c.stroke();c.setLineDash([]);
+  const sx=zx-6;c.fillStyle='#07090A';c.fillRect(sx-1,G-30,2.4,30);c.save();c.translate(sx+.2,G-36);c.rotate(-.08);c.beginPath();c.moveTo(0,-8);c.lineTo(8,6);c.lineTo(-8,6);c.closePath();c.fill();c.strokeStyle=`rgba(255,170,90,${.9*a})`;c.lineWidth=1;c.stroke();
+  c.fillStyle=`rgba(255,200,140,${a})`;c.fillRect(-.8,-3,1.6,5);c.fillRect(-.8,3.2,1.6,1.4);c.restore();}
  // decoy + tell fx
  const tellFx=x=>{c.fillStyle='rgba(140,110,80,.8)';for(let q=0;q<4;q++)c.fillRect(x-10+q*6,G+3+((tt*60+q*9)%10),2,2);c.fillStyle='#fff';c.globalAlpha=.5+.5*Math.sin(tt*40);c.fillRect(x-1,G-3,2,2);c.globalAlpha=1;};
  for(const d of L.decoys)if(d.st==='tell')tellFx(d.x);
@@ -947,6 +954,12 @@ drawCoin=function(x,y,red,tt){const r=7.5,s=Math.cos(tt*2.4+x*.05),ax=Math.max(.
  if(ax>.3){c.save();c.translate(fx,y);c.scale(s,1);c.fillStyle=pal[3];c.globalAlpha=.6;c.fillRect(-2.6,-3.4,5.2,1.6);c.fillRect(-.9,-3.4,1.8,6.8);c.globalAlpha=1;c.fillStyle=pal[0];c.fillRect(-2.9,-3.8,5.2,1.5);c.fillRect(-1.2,-3.8,1.7,6.6);c.restore();}
  if(((tt*.5+x*.013)%1)<.06){c.fillStyle='#FFFBEA';c.beginPath();const sx=fx-3,sy=y-4,q=3;c.moveTo(sx,sy-q);c.lineTo(sx+.6,sy-.6);c.lineTo(sx+q,sy);c.lineTo(sx+.6,sy+.6);c.lineTo(sx,sy+q);c.lineTo(sx-.6,sy+.6);c.lineTo(sx-q,sy);c.lineTo(sx-.6,sy-.6);c.fill();}};
 window.tdT=()=>({L,Pl,G_,kill});
+// what killed you, in one word, so a death is never confusing
+const _kill=kill;kill=function(type){if(!Pl||Pl.dead)return _kill(type);let n=type==='byebye'?'Khaai mein gire!':null;
+ if(!n){let best=null,bd=1e9;for(const t of L.traps){if(t.st!=='fire')continue;const d=Math.abs((t.sx??t.bx??t.x)-Pl.x);if(d<bd){bd=d;best=t;}}
+  n=best?({crack:'Nakli zameen!',spikes:'Bhaale nikle!',crusher:'Crusher gira!',saw:best.type==='axe'?'Kulhaadi!':'Aari!',axe:'Kulhaadi!',boulder:'Patthar aaya!',coin:'Nakli sikka!'})[best.type]:null;}
+ _kill(type);if(n)toast(n);};
+(()=>{const b=document.getElementById('charT');if(!b)return;b.textContent='Characters: '+(CHAR_SIL?'Silhouette':'Rangeen');b.onclick=()=>{try{localStorage.setItem('td-chars',CHAR_SIL?'color':'sil')}catch(e){}CHAR_SIL=!CHAR_SIL;b.textContent='Characters: '+(CHAR_SIL?'Silhouette':'Rangeen');};})();
 // ---------- story cutscenes: the kidnap intro and the level 1000 rescue ----------
 // Drawn live on a canvas over the game with the same fog, silhouettes and grain, with subtitles and sound.
 const ST={on:false,which:'intro',t:0,last:0,raf:0,cv:null,cx:null,sub:null,done:null,amb:null};
@@ -1022,7 +1035,7 @@ function drawIntro(c,t){
  const carried=t>10.9&&t<13.3;if(mx>-900&&!carried)person(c,mx,my,{skin:'mira',st:mst,ph:mph,t:tt,flip:mflip,scared:t>8.8});
  for(let i=gs.length-1;i>=0;i--){const back=t>=12.6;person(c,gs[i],G,{skin:'goon',st:i===0&&carried?'carry':'walk',ph:t*6+i,t:tt,flip:!back});}
  if(carried)person(c,gs[0]+(t>=12.6?4:-4),G-30,{skin:'mira',st:'struggle',t:tt,flip:t<12.6,rot:t<12.6?-1.2:1.2,noShadow:true});
- const ks=SKINS.kai.scarf;if(t<17.2)SKINS.kai.scarf=null;person(c,kx,ky,{skin:'kai',st:kst,ph:kph,t:tt,scared:t>8.8&&t<16});SKINS.kai.scarf=ks;
+ const ks=SKINS.kai.scarf;if(t<17.2)SKINS.kai.scarf=null;person(c,kx,ky-(kst==='down'?2.5:0),{skin:'kai',st:kst,ph:kph,t:tt,scared:t>8.8&&t<16,rot:kst==='down'?-1.52*Math.min(1,(t-11.6)/.35)**2:0,noShadow:kst==='down'});SKINS.kai.scarf=ks;
  if(jx<CAMX+W+300)jeep(c,jx,G,tt,t>13.2?14:(t<9?10:0));
  c.restore();fgLayer(c);
  if(t<5)fireflies(c,tt,8);
@@ -1034,7 +1047,7 @@ function drawEnding(c,t){CAMX=40;const om=MOOD;MOOD='moon';const tt=time;bg(c,P0
  c.save();c.translate(-CAMX,0);floor(c,P0,CAMX-40,CAMX+W+40);
  // boss falls back at 4.2, cage opens at 7.5, they meet at 9
  const bx=t<4.2?230:stEase(230,330,4.2,5.4,t),by=t<4.2?G:stEase(G,G+120,4.2,5.6,t);
- person(c,bx,by,{skin:'shera',st:t<4.2?'idle':'down',t:tt,flip:true,rot:t>4.2?stEase(0,1.4,4.2,5.4,t):0,noShadow:t>4.2});
+ person(c,bx,by,{skin:'shera',st:t<4.2?'idle':'down',t:tt,flip:true,rot:t>4.2?stEase(0,1.52,4.2,4.75,t):0,noShadow:t>4.2});
  const kx=t<3.2?stEase(100,180,0,3.2,t):t<4.3?stEase(180,212,3.2,4.3,t):t<5?stEase(212,190,4.3,5,t):t<8?190:stEase(190,206,8,9,t);
  const ky=t>3.2&&t<4.5?G-Math.sin((t-3.2)/1.3*Math.PI)*26:G;
  person(c,kx,ky,{skin:'kai',st:t<3.2?'run':(t<4.5?'air':(t>8&&t<9?'walk':'idle')),vy:t<3.85?-200:200,ph:t*13,t:tt});

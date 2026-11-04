@@ -73,7 +73,7 @@ function drawIntro(c,t){
  const carried=t>10.9&&t<13.3;if(mx>-900&&!carried)person(c,mx,my,{skin:'mira',st:mst,ph:mph,t:tt,flip:mflip,scared:t>8.8});
  for(let i=gs.length-1;i>=0;i--){const back=t>=12.6;person(c,gs[i],G,{skin:'goon',st:i===0&&carried?'carry':'walk',ph:t*6+i,t:tt,flip:!back});}
  if(carried)person(c,gs[0]+(t>=12.6?4:-4),G-30,{skin:'mira',st:'struggle',t:tt,flip:t<12.6,rot:t<12.6?-1.2:1.2,noShadow:true});
- const ks=SKINS.kai.scarf;if(t<17.2)SKINS.kai.scarf=null;person(c,kx,ky,{skin:'kai',st:kst,ph:kph,t:tt,scared:t>8.8&&t<16});SKINS.kai.scarf=ks;
+ const ks=SKINS.kai.scarf;if(t<17.2)SKINS.kai.scarf=null;person(c,kx,ky-(kst==='down'?2.5:0),{skin:'kai',st:kst,ph:kph,t:tt,scared:t>8.8&&t<16,rot:kst==='down'?-1.52*Math.min(1,(t-11.6)/.35)**2:0,noShadow:kst==='down'});SKINS.kai.scarf=ks;
  if(jx<CAMX+W+300)jeep(c,jx,G,tt,t>13.2?14:(t<9?10:0));
  c.restore();fgLayer(c);
  if(t<5)fireflies(c,tt,8);
@@ -85,7 +85,7 @@ function drawEnding(c,t){CAMX=40;const om=MOOD;MOOD='moon';const tt=time;bg(c,P0
  c.save();c.translate(-CAMX,0);floor(c,P0,CAMX-40,CAMX+W+40);
  // boss falls back at 4.2, cage opens at 7.5, they meet at 9
  const bx=t<4.2?230:stEase(230,330,4.2,5.4,t),by=t<4.2?G:stEase(G,G+120,4.2,5.6,t);
- person(c,bx,by,{skin:'shera',st:t<4.2?'idle':'down',t:tt,flip:true,rot:t>4.2?stEase(0,1.4,4.2,5.4,t):0,noShadow:t>4.2});
+ person(c,bx,by,{skin:'shera',st:t<4.2?'idle':'down',t:tt,flip:true,rot:t>4.2?stEase(0,1.52,4.2,4.75,t):0,noShadow:t>4.2});
  const kx=t<3.2?stEase(100,180,0,3.2,t):t<4.3?stEase(180,212,3.2,4.3,t):t<5?stEase(212,190,4.3,5,t):t<8?190:stEase(190,206,8,9,t);
  const ky=t>3.2&&t<4.5?G-Math.sin((t-3.2)/1.3*Math.PI)*26:G;
  person(c,kx,ky,{skin:'kai',st:t<3.2?'run':(t<4.5?'air':(t>8&&t<9?'walk':'idle')),vy:t<3.85?-200:200,ph:t*13,t:tt});

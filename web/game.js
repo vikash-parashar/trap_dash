@@ -137,10 +137,12 @@ function render(){const tt=time;c.setTransform(DPR*SC,0,0,DPR*SC,0,0);W=VW;
  for(let k=0;k<LEN;k++){const t=L.tiles[k];if(t.falling&&t.fall<1.2){c.save();c.translate(0,ei(Math.min(1,t.fall/.5))*80);floor(c,P,k*TILE,k*TILE+TILE,G,26);c.restore();}}
  c.strokeStyle='rgba(0,0,0,.14)';c.lineWidth=1;for(let k=Math.floor(v0/TILE);k<v1/TILE;k++){if(L.tiles[k]&&L.tiles[k].solid){c.beginPath();c.moveTo(k*TILE,G+2);c.lineTo(k*TILE,G+9);c.stroke();}}
  // danger zones (Easy*: 2 tiles, 130px before)
- for(const t of L.traps){if(t.st!=='idle'&&t.st!=='tell')continue;const zx=t.z0*TILE,zw=2*TILE;if(Pl.x<zx-130||Pl.x>zx+zw+10)continue;const a=.42+.25*Math.sin(tt*10);
-  const g=c.createLinearGradient(0,G-26,0,G);g.addColorStop(0,'rgba(200,48,32,0)');g.addColorStop(1,`rgba(200,48,32,${a*.5})`);c.fillStyle=g;c.fillRect(zx,G-26,zw,26);
-  c.save();c.beginPath();c.rect(zx,G,zw,9);c.clip();c.fillStyle=`rgba(200,48,32,${a})`;c.fillRect(zx,G,zw,9);c.fillStyle='rgba(30,10,20,.35)';for(let x=zx-10;x<zx+zw;x+=8){const o=tt*20%8;c.beginPath();c.moveTo(x+o,G+9);c.lineTo(x+4+o,G);c.lineTo(x+7+o,G);c.lineTo(x+3+o,G+9);c.fill();}c.restore();
-  c.fillStyle='#B8321F';c.beginPath();c.roundRect(zx+zw/2-8,G-42,16,13,4);c.fill();c.fillStyle='#fff';c.font='900 10px Nunito, system-ui';c.textAlign='center';c.textBaseline='middle';c.fillText('!',zx+zw/2,G-35);}
+ for(const t of L.traps){if(t.st!=='idle'&&t.st!=='tell')continue;const zx=t.z0*TILE,zw=2*TILE;if(Pl.x<zx-130||Pl.x>zx+zw+10)continue;const a=.55+.3*Math.sin(tt*6);
+  // warm warning light on the ground over the danger zone + an old warning sign post
+  const g=c.createRadialGradient(zx+zw/2,G,2,zx+zw/2,G,zw*.75);g.addColorStop(0,`rgba(255,120,40,${.32*a})`);g.addColorStop(1,'rgba(255,120,40,0)');c.fillStyle=g;c.fillRect(zx-zw*.3,G-zw*.5,zw*1.6,zw*.5+6);
+  c.strokeStyle=`rgba(255,150,70,${.75*a})`;c.lineWidth=1.2;c.setLineDash([3,3]);c.beginPath();c.moveTo(zx,G+1);c.lineTo(zx+zw,G+1);c.stroke();c.setLineDash([]);
+  const sx=zx-6;c.fillStyle='#07090A';c.fillRect(sx-1,G-30,2.4,30);c.save();c.translate(sx+.2,G-36);c.rotate(-.08);c.beginPath();c.moveTo(0,-8);c.lineTo(8,6);c.lineTo(-8,6);c.closePath();c.fill();c.strokeStyle=`rgba(255,170,90,${.9*a})`;c.lineWidth=1;c.stroke();
+  c.fillStyle=`rgba(255,200,140,${a})`;c.fillRect(-.8,-3,1.6,5);c.fillRect(-.8,3.2,1.6,1.4);c.restore();}
  // decoy + tell fx
  const tellFx=x=>{c.fillStyle='rgba(140,110,80,.8)';for(let q=0;q<4;q++)c.fillRect(x-10+q*6,G+3+((tt*60+q*9)%10),2,2);c.fillStyle='#fff';c.globalAlpha=.5+.5*Math.sin(tt*40);c.fillRect(x-1,G-3,2,2);c.globalAlpha=1;};
  for(const d of L.decoys)if(d.st==='tell')tellFx(d.x);

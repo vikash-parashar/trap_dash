@@ -21,7 +21,7 @@ function pose(st,ph,vy,t){const s=Math.sin(ph),s2=Math.sin(ph+Math.PI);
  if(st==='zap')return{l:[.45,0],r:[-.45,0],al:[2.4,-.2],ar:[-2.4,.2],bob:0,lean:0};
  if(st==='slide')return{l:[1.2,-.2],r:[.6,-.4],al:[-2.2,.3],ar:[-1.6,.4],bob:4,lean:-.35};
  if(st==='struggle')return{l:[.6+Math.sin(t*14)*.5,-.8],r:[-.4+Math.sin(t*14+2)*.5,-.6],al:[2.6+Math.sin(t*11)*.4,-.5],ar:[-2.2+Math.sin(t*12)*.4,-.4],bob:0,lean:0};
- if(st==='down')return{l:[1.4,-.3],r:[1.2,-.6],al:[1.6,.3],ar:[1.2,.5],bob:0,lean:-1.35};
+ if(st==='down')return{l:[.3,-.2],r:[.1,-.5],al:[1.9,-.6],ar:[2.5,-.2],bob:0,lean:0};
  if(st==='slump')return{l:[.35,-.9],r:[.15,-1.1],al:[.5,.1],ar:[.2,.2],bob:0,lean:.55};
  if(st==='carry')return{l:[s*.4,-.2-Math.max(0,s)*.4],r:[s2*.4,-.2-Math.max(0,s2)*.4],al:[2.6,-1.5],ar:[2.2,-1.9],bob:-Math.abs(Math.cos(ph))*.8,lean:.12};
  if(st==='walk')return{l:[s*.45,-Math.max(0,Math.sin(ph-1.2))*.7],r:[s2*.45,-Math.max(0,Math.sin(ph+Math.PI-1.2))*.7],al:[-s*.4,-.3],ar:[-s2*.4,-.3],bob:-Math.abs(Math.cos(ph))*.7,lean:.04};
@@ -58,10 +58,11 @@ function figure(c,S,o){const st=o.st||'idle',t=o.t??performance.now()/1000,ph=o.
  c.fillStyle=skinD;c.beginPath();c.ellipse(-.6,hy+.4,1.1,1.5,0,0,7);c.fill();
  // face details
  const scared=o.scared||((st==='air'||st==='fall')&&vy>150);const bl=!scared&&(t%3.6)<.12;
- if(S.shades){c.fillStyle='#0c0d10';c.fillRect(hr*.25,hy-1.6,hr*.85,1.7);c.fillStyle='rgba(255,255,255,.4)';c.fillRect(hr*.35,hy-1.4,.8,.4);}
+ if(S.sil){c.save();c.fillStyle=S.eye||'#F4F1E8';c.shadowColor=S.eye||'#fff';c.shadowBlur=3;c.beginPath();if(bl)c.ellipse(hr*.62,hy-.7,.8,.15,0,0,7);else c.ellipse(hr*.62,hy-.7,scared?1:.75,scared?1.05:.8,0,0,7);c.fill();c.restore();}
+ else if(S.shades){c.fillStyle='#0c0d10';c.fillRect(hr*.25,hy-1.6,hr*.85,1.7);c.fillStyle='rgba(255,255,255,.4)';c.fillRect(hr*.35,hy-1.4,.8,.4);}
  else{c.fillStyle='#fff';c.beginPath();c.ellipse(hr*.62,hy-.7,scared?1.05:.85,bl?.15:(scared?1.05:.7),0,0,7);c.fill();if(!bl){c.fillStyle='#24140b';c.beginPath();c.arc(hr*.72,hy-.65,scared?.55:.48,0,7);c.fill();}
   c.strokeStyle=girl?'#1b0f08':S.hc;c.lineWidth=girl?.4:.55;c.beginPath();c.moveTo(hr*.2,hy-(big||o.angry?1.6:2.1));c.lineTo(hr*1.0,hy-(big?2.4:2.2));c.stroke();}
- c.strokeStyle=girl?'#A8434A':_sh(S.skin,-.45);c.lineWidth=girl?.6:.4;c.beginPath();if(scared){c.ellipse(hr*.82,hy+2.6,.55,.75,0,0,7);c.stroke();}else{c.moveTo(hr*.55,hy+2.6);c.lineTo(hr*.95,hy+2.5);c.stroke();}
+ if(!S.sil){c.strokeStyle=girl?'#A8434A':_sh(S.skin,-.45);c.lineWidth=girl?.6:.4;c.beginPath();if(scared){c.ellipse(hr*.82,hy+2.6,.55,.75,0,0,7);c.stroke();}else{c.moveTo(hr*.55,hy+2.6);c.lineTo(hr*.95,hy+2.5);c.stroke();}}
  if(S.beard){c.fillStyle=S.beard==='stubble'?'rgba(25,15,10,.35)':S.hc;c.beginPath();c.moveTo(-hr*.3,hy+.8);c.quadraticCurveTo(hr*.2,hy+hr*1.25,hr+.3,hy+hr*.6);c.lineTo(hr*.95,hy+1.9);c.quadraticCurveTo(hr*.3,hy+2.4,-hr*.1,hy+.5);c.closePath();c.fill();}
  // hair
  c.fillStyle=S.hc;
@@ -81,7 +82,10 @@ function figure(c,S,o){const st=o.st||'idle',t=o.t??performance.now()/1000,ph=o.
  {const[hx,hy2]=seg(c,1.5,shY+1.5,P.al[0],P.al[1],6.4,6.2,aw,aw*.85,sleeve,S.top==='kurti'?S.skin:sleeve);c.fillStyle=S.skin;c.beginPath();c.arc(hx,hy2,1.5,0,7);c.fill();}
  c.restore();
  c.restore();}
-function person(c,x,y,o={}){const S=SKINS[o.skin||SKIN]||SKINS.kai;const t=o.t??performance.now()/1000;
+let CHAR_SIL=true;try{CHAR_SIL=localStorage.getItem('td-chars')!=='color';}catch(e){}
+const SILC='#0B0C0D';
+function silOf(S){return{...S,skin:SILC,tc:SILC,pants:SILC,shoes:SILC,hc:SILC,inner:SILC,sole:null,beard:null,shades:false,sil:true,emb:S.kind==='girl'?'#E3B23C':SILC,eye:S.kind==='goon'?'#FF4A3D':'#F4F1E8'};}
+function person(c,x,y,o={}){let S=SKINS[o.skin||SKIN]||SKINS.kai;if(CHAR_SIL)S=silOf(S);const t=o.t??performance.now()/1000;
  if(!o.noShadow&&y<=G+.5&&y>G-90&&!o.rot){const k=1-(G-y)/90;c.fillStyle=`rgba(0,0,0,${.38*k})`;c.beginPath();c.ellipse(x,G+1.2,10*k+3,2.2*k+.5,0,0,7);c.fill();}
  c.save();c.translate(x,y);if(o.flip)c.scale(-1,1);if(o.rot)c.rotate(o.rot);if(o.alpha!=null)c.globalAlpha=o.alpha;
  // soft rim light from the moon/sun behind

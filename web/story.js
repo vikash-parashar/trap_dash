@@ -8,8 +8,8 @@ function stSub(t){const S=ST.which==='intro'?[
   [4.8,8.6,'Tabhi door se ek gaadi ki roshni dikhi…'],
   [8.8,12.8,'Gundon ne Mira ko utha liya!'],
   [12.9,15.8,'"KAI!"'],
-  [16,20.4,'Mira ko Trap Tower ki 1000vi manzil pe qaid kar diya gaya.'],
-  [20.6,25,'Har manzil pe jaal. Har 100 manzil pe ek boss. Kai ruka nahi.']]:[
+  [16,20.4,'Shera ka gair-kaanooni live show: TRAP TOWER. Inaam: Mira, 1000vi manzil pe.'],
+  [20.6,25,'Har manzil pe jaal, har 100 pe ek boss, aur duniya bet laga rahi hai. Kai ruka nahi.']]:[
   [0,4,'Level 1000. Trap Tower ki chhat.'],
   [4.2,8,'Aakhri boss gir gaya.'],
   [8.2,12,'"Mujhe pata tha tum aaoge."'],
@@ -85,7 +85,7 @@ function drawEnding(c,t){CAMX=40;const om=MOOD;MOOD='moon';const tt=time;bg(c,P0
  c.save();c.translate(-CAMX,0);floor(c,P0,CAMX-40,CAMX+W+40);
  // boss falls back at 4.2, cage opens at 7.5, they meet at 9
  const bx=t<4.2?230:stEase(230,330,4.2,5.4,t),by=t<4.2?G:stEase(G,G+120,4.2,5.6,t);
- person(c,bx,by,{skin:'goon',st:t<4.2?'idle':'down',t:tt,flip:true,rot:t>4.2?stEase(0,1.4,4.2,5.4,t):0,noShadow:t>4.2});
+ person(c,bx,by,{skin:'shera',st:t<4.2?'idle':'down',t:tt,flip:true,rot:t>4.2?stEase(0,1.4,4.2,5.4,t):0,noShadow:t>4.2});
  const kx=t<3.2?stEase(100,180,0,3.2,t):t<4.3?stEase(180,212,3.2,4.3,t):t<5?stEase(212,190,4.3,5,t):t<8?190:stEase(190,206,8,9,t);
  const ky=t>3.2&&t<4.5?G-Math.sin((t-3.2)/1.3*Math.PI)*26:G;
  person(c,kx,ky,{skin:'kai',st:t<3.2?'run':(t<4.5?'air':(t>8&&t<9?'walk':'idle')),vy:t<3.85?-200:200,ph:t*13,t:tt});

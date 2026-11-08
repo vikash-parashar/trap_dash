@@ -6,4 +6,3 @@ local.properties
 .idea/
 dist/
 node_modules
-config.bat
